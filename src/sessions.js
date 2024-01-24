@@ -143,9 +143,10 @@ const initializeEvents = (client, sessionId) => {
         await client.destroy().catch(e => {})
         setupSession(sessionId)
       }
-      client.pupPage.once('close', function () {
+      client.pupPage.once('close', function (msg) {
         // emitted when the page closes
         console.log(`Browser page closed for ${sessionId}. Restoring`)
+        triggerWebhook(sessionWebhook, sessionId, 'close', { msg })
         restartSession(sessionId)
       })
       client.pupPage.once('error', function () {
@@ -159,21 +160,21 @@ const initializeEvents = (client, sessionId) => {
   checkIfEventisEnabled('auth_failure')
     .then(_ => {
       client.on('auth_failure', (msg) => {
-        triggerWebhook(sessionWebhook, sessionId, 'status', { msg })
+        triggerWebhook(sessionWebhook, sessionId, 'status_failure', { msg })
       })
     })
 
   checkIfEventisEnabled('authenticated')
     .then(_ => {
       client.on('authenticated', () => {
-        triggerWebhook(sessionWebhook, sessionId, 'authenticated')
+        // triggerWebhook(sessionWebhook, sessionId, 'authenticated')
       })
     })
 
   checkIfEventisEnabled('call')
     .then(_ => {
       client.on('call', async (call) => {
-        triggerWebhook(sessionWebhook, sessionId, 'call', { call })
+        // triggerWebhook(sessionWebhook, sessionId, 'call', { call })
       })
     })
 
@@ -194,35 +195,35 @@ const initializeEvents = (client, sessionId) => {
   checkIfEventisEnabled('group_join')
     .then(_ => {
       client.on('group_join', (notification) => {
-        triggerWebhook(sessionWebhook, sessionId, 'group_join', { notification })
+        // triggerWebhook(sessionWebhook, sessionId, 'group_join', { notification })
       })
     })
 
   checkIfEventisEnabled('group_leave')
     .then(_ => {
       client.on('group_leave', (notification) => {
-        triggerWebhook(sessionWebhook, sessionId, 'group_leave', { notification })
+        // triggerWebhook(sessionWebhook, sessionId, 'group_leave', { notification })
       })
     })
 
   checkIfEventisEnabled('group_update')
     .then(_ => {
       client.on('group_update', (notification) => {
-        triggerWebhook(sessionWebhook, sessionId, 'group_update', { notification })
+        // triggerWebhook(sessionWebhook, sessionId, 'group_update', { notification })
       })
     })
 
   checkIfEventisEnabled('loading_screen')
     .then(_ => {
       client.on('loading_screen', (percent, message) => {
-        triggerWebhook(sessionWebhook, sessionId, 'loading_screen', { percent, message })
+        // triggerWebhook(sessionWebhook, sessionId, 'loading_screen', { percent, message })
       })
     })
 
   checkIfEventisEnabled('media_uploaded')
     .then(_ => {
       client.on('media_uploaded', (message) => {
-        triggerWebhook(sessionWebhook, sessionId, 'media_uploaded', { message })
+        // triggerWebhook(sessionWebhook, sessionId, 'media_uploaded', { message })
       })
     })
 
@@ -234,7 +235,7 @@ const initializeEvents = (client, sessionId) => {
           // custom service event
           checkIfEventisEnabled('media').then(_ => {
             message.downloadMedia().then(messageMedia => {
-              triggerWebhook(sessionWebhook, sessionId, 'media', { messageMedia, message })
+              // triggerWebhook(sessionWebhook, sessionId, 'media', { messageMedia, message })
             }).catch(e => {
               console.log('Download media error:', e.message)
             })
@@ -250,7 +251,7 @@ const initializeEvents = (client, sessionId) => {
   checkIfEventisEnabled('message_ack')
     .then(_ => {
       client.on('message_ack', async (message, ack) => {
-        triggerWebhook(sessionWebhook, sessionId, 'message_ack', { message, ack })
+        // triggerWebhook(sessionWebhook, sessionId, 'message_ack', { message, ack })
         if (setMessagesAsSeen) {
           const chat = await message.getChat()
           chat.sendSeen()
@@ -261,7 +262,7 @@ const initializeEvents = (client, sessionId) => {
   checkIfEventisEnabled('message_create')
     .then(_ => {
       client.on('message_create', async (message) => {
-        triggerWebhook(sessionWebhook, sessionId, 'message_create', { message })
+        // triggerWebhook(sessionWebhook, sessionId, 'message_create', { message })
         if (setMessagesAsSeen) {
           const chat = await message.getChat()
           chat.sendSeen()
@@ -272,14 +273,14 @@ const initializeEvents = (client, sessionId) => {
   checkIfEventisEnabled('message_reaction')
     .then(_ => {
       client.on('message_reaction', (reaction) => {
-        triggerWebhook(sessionWebhook, sessionId, 'message_reaction', { reaction })
+        // triggerWebhook(sessionWebhook, sessionId, 'message_reaction', { reaction })
       })
     })
 
   checkIfEventisEnabled('message_revoke_everyone')
     .then(_ => {
       client.on('message_revoke_everyone', async (after, before) => {
-        triggerWebhook(sessionWebhook, sessionId, 'message_revoke_everyone', { after, before })
+        // triggerWebhook(sessionWebhook, sessionId, 'message_revoke_everyone', { after, before })
       })
     })
 
@@ -302,7 +303,7 @@ const initializeEvents = (client, sessionId) => {
   checkIfEventisEnabled('contact_changed')
     .then(_ => {
       client.on('contact_changed', async (message, oldId, newId, isContact) => {
-        triggerWebhook(sessionWebhook, sessionId, 'contact_changed', { message, oldId, newId, isContact })
+        // triggerWebhook(sessionWebhook, sessionId, 'contact_changed', { message, oldId, newId, isContact })
       })
     })
 }
