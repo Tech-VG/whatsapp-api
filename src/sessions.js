@@ -230,6 +230,7 @@ const initializeEvents = (client, sessionId) => {
   checkIfEventisEnabled('message')
     .then(_ => {
       client.on('message', async (message) => {
+        console.log(message)
         triggerWebhook(sessionWebhook, sessionId, 'message', { message })
         if (message.hasMedia && message._data?.size < maxAttachmentSize) {
           // custom service event
