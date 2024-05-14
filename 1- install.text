@@ -7,6 +7,9 @@
 3- install pm2 by npm 
     npm install pm2 -g
 
+4- clone project from githup
+    git clone https://github.com/Tech-VG/whatsapp-api.git
+
 4- run npm install on the same directory 
 
 5- open port 3000
